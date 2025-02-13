@@ -87,12 +87,6 @@ def isPalindrome3(head):
 
     return res
        
-    
-
-
-
-
-
 
 #---------------------------------------------------------------------------------
 
@@ -105,10 +99,10 @@ class Node:
 def printLinkedList(head):
     cur = head
     while cur!=None:
-        print(cur.value, end=" ")
+       # print(cur.value, end=" ")
         cur = cur.next
-    print("")
-    print("---------")
+    #print("")
+    #print("---------")
 
 def listToLinkedList(lst):
     if not lst:

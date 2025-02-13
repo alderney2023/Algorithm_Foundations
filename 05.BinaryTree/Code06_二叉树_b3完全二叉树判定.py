@@ -7,6 +7,7 @@
 
 ###########################################################################
 
+# 方法一：按层遍历过程中判断
 
 def isCBT(head):
     if not head:
@@ -27,7 +28,46 @@ def isCBT(head):
     return True
 
 
+#---------------------------------------------------------------------------------
 
+# 方法二：二叉树递归套路
+
+class info:
+    def __init__(self,isFull, isCBT, height):
+        self.isFull = isFull
+        self.isCBT = isCBT
+        self.height = height
+
+def isCBT2(head):
+    if not head:
+        return None
+    return process(head).isCBT
+
+def process(head):
+    if not head:
+        return info(True, True, 0)
+    
+    leftInfo = process(head.left)
+    rightInfo = process(head.right)
+
+    height = max(leftInfo.height, rightInfo.height) + 1
+    isFull = False
+    if leftInfo.isFull and rightInfo.isFull and leftInfo.height == rightInfo.height:
+        isFull = True
+    isCBT = False
+
+    #满二叉树（无缺口，左满，右满，左右在同层）
+    #缺口在左，左不满，右满，左比右高一层
+    #缺口在左，左满，右满，左比右高一层
+    #缺口在右，左满，右不满，左右在同层
+    if isFull or\
+       (leftInfo.isCBT and rightInfo.isFull and leftInfo.height == rightInfo.height + 1) or\
+       (leftInfo.isFull and rightInfo.isFull and leftInfo.height == rightInfo.height + 1) or\
+       (leftInfo.isFull and rightInfo.isCBT and leftInfo.height == rightInfo.height):
+        isCBT = True
+    return info(isFull, isCBT, height)
+
+   
 
 
 #---------------------------------------------------------------------------------
@@ -48,6 +88,7 @@ def main():
     head.right.right = Node(7)
 
     print(isCBT(head))
+    print(isCBT2(head))
     
 
 

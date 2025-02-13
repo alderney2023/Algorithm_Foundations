@@ -1,46 +1,50 @@
 ###########################################################################
 # 给定一棵二叉树的头节点head, 
-# 返回这棵二叉树中最大的二叉搜索子树的节点数
+# 返回这棵二叉树中最大的二叉搜索子树的头节点
 ###########################################################################
 
 
 class info:
-    def __init__(self, isBST,maxV, minV, maxSize):
-        self.isBST = isBST
+    def __init__(self, maxSubBSTHead,maxV, minV, maxSize):
+        self.maxSubBSTHead = maxSubBSTHead
         self.maxV = maxV
         self.minV = minV
         self.maxSize = maxSize
 
 def maxSubBST(head): 
     if not head:
-        return 0 
-    return process(head).maxSize
+        return None
+    return process(head).maxSubBSTHead
 
 def process(head):
     if not head:
         return None
+    
     leftInfo = process(head.left)
     rightInfo = process(head.right)
 
     maxV = minV = head.value
     maxSize = 0
+    maxSubBSTHead = None
     if leftInfo:
         maxV = max(maxV, leftInfo.maxV)
         minV = min(minV, leftInfo.minV)
+        maxSubBSTHead = leftInfo.maxSubBSTHead
         maxSize = max(maxSize, leftInfo.maxSize)
     if rightInfo:
         maxV = max(maxV, rightInfo.maxV)
         minV = min(minV, rightInfo.minV)    
-        maxSize = max(maxSize, rightInfo.maxSize)   
+        if rightInfo.maxSize > maxSize:
+            maxSubBSTHead = rightInfo.maxSubBSTHead
+            maxSize = rightInfo.maxSize  
 
-    isBST = False
-    if (not leftInfo or (head.value > leftInfo.maxV and leftInfo.isBST)) and \
-        (not rightInfo or (head.value < rightInfo.minV and rightInfo.isBST))  :
-        isBST = True
+    if (not leftInfo or (head.value > leftInfo.maxV and leftInfo.maxSubBSTHead == head.left)) and \
+        (not rightInfo or (head.value < rightInfo.minV and rightInfo.maxSubBSTHead == head.right))  :
+        maxSubBSTHead = head
         maxSize = (leftInfo.maxSize if leftInfo else 0) + \
                (rightInfo.maxSize if rightInfo else 0) + 1
     
-    return info(isBST, maxV, minV, maxSize)
+    return info(maxSubBSTHead, maxV, minV, maxSize)
 
 
 
@@ -81,11 +85,11 @@ def generateNode(val):
 def main():
     l= [1,2,3,4,5,6,7,None,None,None,None,None,None,None,None]
     head = buildByLevelQueue(l)
-    print(maxSubBST(head)) #1
+    print(maxSubBST(head).value) #1
 
     l2 = [4,2,6,1,3,5,7,None,None,None,None,None,None,None,None]
     head2 = buildByLevelQueue(l2)
-    print(maxSubBST(head2)) #7
+    print(maxSubBST(head2).value) #7
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,7 @@
 #   它或者是一棵空树，或者是具有下列性质的二叉树： 
 #       若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值； 
 #       若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值； 
-#       它的左、右子树也分别为二叉排序树
+#       它的左、右子树也分别为二叉搜索树
 #
 #   方法一： 递归法， 在每个节点上核查BST的三项是否符合
 #   方法二： 递归中序遍历，存入栈，再比较
@@ -25,27 +25,40 @@ def isBST(head):
     res = processBST(head)
     return res.isBST 
     
-def processBST(head):
-    if not head:
-        return None
+# def processBST(head):
+#     if not head:
+#         return None
 
-    l = processBST(head.left)
-    r = processBST(head.right)  
+#     l = processBST(head.left)
+#     r = processBST(head.right)  
 
-    isBST = True
-    maxV = head.value
-    minV = head.value
-    if l:
-        minV = min(minV, l.minV)
-        maxV = max(maxV, l.maxV)
-        if (not l.isBST) or l.maxV >= head.value:
-            isBST = False
-    if r:
-        minV = min(r.minV, head.value)
-        maxV = max(r.maxV, head.value)
-        if (not r.isBST) or r.minV <= head.value:
-            isBST = False
+#     isBST = True
+#     maxV = head.value
+#     minV = head.value
+#     if l:
+#         minV = min(minV, l.minV)
+#         maxV = max(maxV, l.maxV)
+#         if (not l.isBST) or l.maxV >= head.value:
+#             isBST = False
+#     if r:
+#         minV = min(r.minV, head.value)
+#         maxV = max(r.maxV, head.value)
+#         if (not r.isBST) or r.minV <= head.value:
+#             isBST = False
+#     return info(isBST, minV, maxV)
+
+def processBST(root):
+    if not root:
+        return info(True, float("inf") , -float("inf"))
+    leftInfo = processBST(root.left)
+    rightInfo = processBST(root.right)
+    maxV = max(leftInfo.maxV, rightInfo.maxV, root.value)
+    minV = min(leftInfo.minV, rightInfo.minV, root.value)
+    isBST = False
+    if root.value > leftInfo.maxV and root.value < rightInfo.minV and leftInfo.isBST and rightInfo.isBST:
+        isBST = True
     return info(isBST, minV, maxV)
+
 
 
 # 方法二： 递归中序遍历，存入栈，再比较

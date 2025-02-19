@@ -5,7 +5,7 @@
 # ###########################################################################
 
 
-from Code01_并查集_灵活字典版 import UnionSet
+from Code01_UnionSet_灵活字典版 import UnionSet
 
 class User:
     def __init__(self, attr1, attr2, attr3):

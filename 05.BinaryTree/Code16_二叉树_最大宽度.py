@@ -1,24 +1,71 @@
 ###########################################################################
-# 宽度优先遍历
+# 最大宽度
+# 方法一： 借用一个字典和几个变量
+# 方法二： 只借用几个变量
 ###########################################################################
 
 import random
 
-# 宽度优先遍历
-def level(head):
+# 方法一： 借用一个字典和几个变量
+def maxWidthUseDic(head):
     if not head:
         return
+        
+    dic_level = {}
+    dic_level[head] = 1
+    curLevel = 1
+    curNodes = 0
+    maxNodes = 0 
     queue = []
     queue.append(head)
     while queue:
         head = queue.pop(0)
-        print(head.value, end=" ")
+        nodeLevel = dic_level.get(head)
+
         if head.left:
+            dic_level[head.left] = nodeLevel + 1
             queue.append(head.left)
         if head.right:
+            dic_level[head.right] = nodeLevel + 1
             queue.append(head.right)
-    print()
 
+        if nodeLevel == curLevel:
+            curNodes += 1
+        else:
+            maxNodes = max(maxNodes,curNodes)
+            curNodes = 1
+            curLevel +=1
+    maxNodes = max(maxNodes,curNodes)
+    return maxNodes    
+      
+
+# 方法二： 只借用几个变量
+def maxWidthNoDic(head):
+    if not head:
+        return
+
+    curEnd = head
+    nextEnd = None
+    curNodes = 0
+    maxNodes = 0 
+    queue = []
+    queue.append(head)
+    while queue:
+        head = queue.pop(0)
+
+        if head.left:
+            nextEnd = head.left
+            queue.append(head.left)
+        if head.right:
+            nextEnd = head.right
+            queue.append(head.right)
+     
+        curNodes += 1
+        if head == curEnd:   # ***
+            maxNodes = max(maxNodes,curNodes)
+            curNodes = 0
+            curEnd = nextEnd
+    return maxNodes   
 
 
 #---------------------------------------------------------------------------------
@@ -28,7 +75,6 @@ class Node:
         self.value = value
         self.left = left
         self.right = right
-
 
 # 创建二叉树
 def generateRandomBT(maxLevel, maxValue):
@@ -82,8 +128,9 @@ def main():
 
 
     head2 = generateRandomBT(10, 100)
-    level(head2)
-    printTree(head2)
+    print(maxWidthUseDic(head2))
+    print(maxWidthNoDic(head2))
+    #printTree(head2)
 
 if __name__ == "__main__":
     main()

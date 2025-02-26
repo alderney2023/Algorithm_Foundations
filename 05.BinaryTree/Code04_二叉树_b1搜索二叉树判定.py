@@ -98,7 +98,7 @@ def isBST3(head):
     return isBST3(head.right)
 
 
-# 方法四：非递归法
+# 方法四：中序遍历，非递归法
 
 def isBST4(head):
     if not head:

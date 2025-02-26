@@ -12,19 +12,18 @@
 def isCBT(head):
     if not head:
         return True
-    stack = []
-    stack.append(head)
+    stack = [head]
     leaf = False
     while stack:
-        head = stack.pop()
+        head = stack.pop(0)
         if (not head.left and head.right) or (leaf and (head.left or head.right)):
             return False
         if head.left:
             stack.append(head.left)
         if head.right:
             stack.append(head.right)
-        if not head.left or not head.right:   # ***
-            left = True
+        if (not head.left) or (not head.right):   # ***
+            leaf = True
     return True
 
 
@@ -82,10 +81,10 @@ def main():
     head = Node(1)
     head.left = Node(2)
     head.right = Node(3)
-    head.left.left = Node(4)
-    head.left.right = Node(5)
-    #head.right.left = Node(6)
-    head.right.right = Node(7)
+    head.left.left = Node(5)
+    #head.left.right = Node(5)
+    head.right.left = Node(7)
+    head.right.right = Node(8)
 
     print(isCBT(head))
     print(isCBT2(head))
